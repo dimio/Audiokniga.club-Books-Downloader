@@ -1,7 +1,7 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name         Audiokniga.club downloader
 // @namespace    http://dimio.org/
-// @version      0.0.1
+// @version      0.0.2
 // @description  Adds links for downloading chapters of the current book on audiokniga.club website
 // @description  Добавляет ссылки для скачивания глав текущей книги на сайте audiokniga.club
 // @author       dimio (dimio@dimio.org)
