@@ -50,18 +50,18 @@
 })(window);
 
 function numSizeToFixed( num, num_size ){
-    const str = num.toString();
+    num = num.toString();
     num_size = parseInt( num_size, 10 );
 
-    if ( str.length < num_size ){
-    	return addLeadingZeros( str, num_size );
+    if ( num.length < num_size ){
+    	return addLeadingZeros( num, num_size );
     }
 
-    if ( str.length === num_size ){
-        return str;
+    if ( num.length === num_size ){
+        return num;
     }
 
-    return str.substring( 0, num_size );
+    return num.substring( 0, num_size );
 }
 
 function addLeadingZeros( str, str_size ){
