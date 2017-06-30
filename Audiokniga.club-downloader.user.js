@@ -2,7 +2,7 @@
 // @name         Audiokniga.club downloader
 // @name:ru	 Audiokniga.club загрузчик книг
 // @namespace    http://dimio.org/
-// @version      0.0.3
+// @version      0.0.5
 // @description  Adds links for downloading chapters of the current book on audiokniga.club website
 // @description:ru  Добавляет ссылки для скачивания глав текущей книги на сайте audiokniga.club
 // @author       dimio (dimio@dimio.org)
@@ -64,11 +64,8 @@ function numSizeToFixed( num, num_size ){
     return str.substring( 0, num_size );
 }
 
-function addLeadingZeros( num, num_size ){
-	const str = num.toString();
-	num_size = parseInt( num_size, 10 );
-
-	return Array.apply( null, {
-		length: num_size - str.length + 1
-	} ).join('0') + str;
+function addLeadingZeros( str, str_size ){
+    return Array.apply( null, {
+        length: str_size - str.length + 1
+    } ).join('0') + str;
 }
