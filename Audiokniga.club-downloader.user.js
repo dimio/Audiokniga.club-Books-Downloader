@@ -2,7 +2,7 @@
 // @name         Audiokniga.club downloader
 // @name:ru	 Audiokniga.club загрузчик книг
 // @namespace    http://dimio.org/
-// @version      0.0.2
+// @version      0.0.3
 // @description  Adds links for downloading chapters of the current book on audiokniga.club website
 // @description:ru  Добавляет ссылки для скачивания глав текущей книги на сайте audiokniga.club
 // @author       dimio (dimio@dimio.org)
@@ -49,22 +49,26 @@
 
 })(window);
 
-function numSizeToFixed( num, num_format ){
+function numSizeToFixed( num, num_size ){
     const str = num.toString();
-    num_format = parseInt( num_format, 10 );
+    num_size = parseInt( num_size, 10 );
 
-    if ( num_format <= str.length ){
-        return str.substring( 0, num_format );
+    if ( str.length < num_size ){
+    	return addLeadingZeros( str, num_size );
     }
 
-    return addLeadingZeros( str, num_format );
+    if ( str.length === num_size ){
+        return str;
+    }
+
+    return str.substring( 0, num_size );
 }
 
-function addLeadingZeros( num, zeros_cnt ){
-    const str = num.toString();
-    zeros_cnt = parseInt( zeros_cnt, 10 );
+function addLeadingZeros( num, num_size ){
+	const str = num.toString();
+	num_size = parseInt( num_size, 10 );
 
-    return Array.apply( null, {
-        length: zeros_cnt - str.length + 1
-    } ).join('0') + str;
+	return Array.apply( null, {
+		length: num_size - str.length + 1
+	} ).join('0') + str;
 }
