@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Audiokniga.club downloader
-// @name:ru	 Audiokniga.club загрузчик книг
+// @name:ru	     Audiokniga.club загрузчик книг
 // @namespace    http://dimio.org/
-// @version      0.0.6
+// @version      0.1.0
 // @description  Adds links for downloading chapters of the current book on audiokniga.club website
 // @description:ru  Добавляет ссылки для скачивания глав текущей книги на сайте audiokniga.club
 // @author       dimio (dimio@dimio.org)
 // @license      MIT
-// @homepage     none
+// @homepage     https://greasyfork.org/ru/scripts/31003-audiokniga-club-downloader
+// @homepage     https://github.com/dimio/Audiokniga.club-Books-Downloader
 // @supportURL   dimio.org
 // @encoding     utf-8
 // @match        http*://audiokniga.club/*
@@ -22,14 +23,13 @@
     const w = unsafeWindow;
 
     let book = {};
+
     book.name = $('#dle-content > div > div.fullstory > div.info > h1')[0].innerText;
     book.chapters = $("div.item");
     book.chapter_prefix_size = book.chapters.length.toString().length;
 
     book.chapters.removeClass('item');
-    //book.chapters.css( "style", "float:left" );
-    //book.chapters.wrap('<div class="item dl-container" style="position:relative;width:auto;margin:0 auto"></div>');
-    book.chapters.wrap('<div class="item" style="cursor:default"></div>');
+    book.chapters.wrap('<div class="item" style="cursor:default">');
 
     $.each( book.chapters, function(key, value) {
         book.chapter_div = $(value);
@@ -40,29 +40,50 @@
         });
 
         book.chapter_name = book.chapter_div[0].innerText;
+        //book.chapter_name = book.chapter_div[0].innerText.split('.')[0];
         book.download_link = book.chapter_div[0].outerHTML.split("'")[1];
-        book.chapter_prefix = numSizeToFixed( ++key, book.chapter_prefix_size );
+        book.chapter_prefix = numSizeToFixed( key + 1, book.chapter_prefix_size );
 
-        let file_name = book.chapter_prefix + '-' + book.name + '_' + book.chapter_name + '.mp3';
+        let file_name = book.chapter_prefix + '-' + book.name + '_' + book.chapter_name;
+        let file_ext = book.chapter_div.attr('onclick').split("'")[1].split('.')[1];
         file_name = file_name.replace(/\s/g, '_');
+        file_name = file_name.substring(0, 250);
+        file_name = file_name + '.' + file_ext;
 
-        let a = document.createElement('a');
-        a.href = w.location.origin + book.download_link;
-        a.download = file_name;
-        a.innerText = 'DL #' + book.chapter_prefix;
-        a.title = 'Download chapter ' + parseInt( book.chapter_prefix, 10 );
+        let a = $('<a>');
+        a.attr("class", "dl-chapter url");
+        a.attr("href", w.location.origin + book.download_link);
+        a.attr("download", file_name);
+        a.text('DL #' + book.chapter_prefix);
+        a.attr("title", 'Download chapter ' + parseInt( book.chapter_prefix, 10 ) );
 
         book.chapter_div[0].innerText = 'Play: ' + book.chapter_div[0].innerText;
         book.chapter_div.parent().prepend(a);
 
-        const dl_div = $('<div></div>').css({
-            "class": "dl-chapter",
+        let dl_div = $('<div>').css({
             "cursor": "default",
             "display": "inline-block",
             "margin-right": "10%",
         });
+        dl_div.attr("class", "dl-chapter");
+
         $(a).wrap(dl_div);
     } ); // end of each
+
+    w.downloadAll = function(){
+        const dl_urls = $('a.dl-chapter.url');
+        if ( dl_urls && confirm(`Download ${dl_urls.length} files?`) ){
+            $.each(dl_urls, function(key, value){
+                value.click();
+            });
+        }
+    };
+
+    let dl_all_div = $('<div><a>DownLoad all chapters</a></div>');
+    dl_all_div.attr("class", "item");
+    dl_all_div.attr("onclick", "downloadAll(); return false;");
+
+    $('div.list').prepend(dl_all_div);
 
 })(window);
 
